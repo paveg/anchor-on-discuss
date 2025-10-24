@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Anchor on Discuss",
+  "version": "1.0.0",
+  "description": "Add anchor links to headings in GitHub Discussions",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://github.com/*/discussions/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*/discussions/*"
+      ],
+      "js": [
+        "content/content.js"
+      ],
+      "css": [
+        "content/styles.css"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

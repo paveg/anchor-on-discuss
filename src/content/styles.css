@@ -1,0 +1,137 @@
+/**
+ * Anchor Link Styles for GitHub Discussions
+ * Mimics GitHub's native anchor link behavior
+ */
+
+/* Heading wrapper */
+h1, h2, h3, h4, h5, h6 {
+  position: relative;
+}
+
+.anchor-wrapper {
+  display: inline;
+}
+
+/* Anchor link base styles */
+.anchor-link {
+  position: absolute;
+  left: -1.5em;
+  padding-right: 0.5em;
+  color: #0969da; /* GitHub link blue */
+  text-decoration: none;
+  font-weight: 400;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .anchor-link {
+    color: #58a6ff;
+  }
+}
+
+/* Show anchor link on heading hover */
+h1:hover .anchor-link,
+h2:hover .anchor-link,
+h3:hover .anchor-link,
+h4:hover .anchor-link,
+h5:hover .anchor-link,
+h6:hover .anchor-link {
+  opacity: 1;
+}
+
+/* Show anchor link when it's focused */
+.anchor-link:focus {
+  opacity: 1;
+  outline: 2px solid #0969da;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Hover effect on the link itself */
+.anchor-link:hover {
+  opacity: 1;
+  color: #0550ae;
+}
+
+@media (prefers-color-scheme: dark) {
+  .anchor-link:hover {
+    color: #79c0ff;
+  }
+}
+
+/* Toast notification */
+.anchor-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background-color: #24292f;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(140, 149, 159, 0.2);
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10000;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Dark mode toast */
+@media (prefers-color-scheme: dark) {
+  .anchor-toast {
+    background-color: #f6f8fa;
+    color: #24292f;
+    box-shadow: 0 8px 24px rgba(1, 4, 9, 0.3);
+  }
+}
+
+/* Toast show animation */
+.anchor-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Highlight targeted heading */
+:target {
+  scroll-margin-top: 80px; /* Account for GitHub's sticky header */
+  animation: highlight-heading 2s ease-in-out;
+}
+
+@keyframes highlight-heading {
+  0% {
+    background-color: rgba(255, 223, 93, 0.4);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* Ensure headings in comments also get proper styling */
+.comment-body h1,
+.comment-body h2,
+.comment-body h3,
+.comment-body h4,
+.comment-body h5,
+.comment-body h6,
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+}
