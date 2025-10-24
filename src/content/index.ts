@@ -32,7 +32,9 @@ function debounce<T extends (...args: any[]) => void>(
  * Process headings and update TOC
  */
 function processAndUpdateTOC(): void {
+  console.log('[Main] Processing headings and updating TOC...');
   const headings = processHeadings();
+  console.log('[Main] Updating TOC with', headings.length, 'headings');
   tocManager.update(headings);
 }
 
@@ -82,11 +84,15 @@ function setupMutationObserver(): MutationObserver {
 function init(): void {
   console.log('[Anchor on Discuss] Initializing...');
 
-  // Process existing headings and create TOC
-  processAndUpdateTOC();
+  // Delay initial processing to ensure content is loaded
+  setTimeout(() => {
+    console.log('[Anchor on Discuss] Running delayed initialization...');
+    // Process existing headings and create TOC
+    processAndUpdateTOC();
 
-  // Handle initial URL hash
-  handleInitialHash();
+    // Handle initial URL hash
+    handleInitialHash();
+  }, 500);
 
   // Setup hash change listener
   setupHashChangeListener();

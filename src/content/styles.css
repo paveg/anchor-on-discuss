@@ -14,9 +14,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Anchor link base styles */
 .anchor-link {
-  position: absolute;
-  left: -1.5em;
-  padding-right: 0.5em;
+  display: inline-block;
+  margin-left: 0.5em;
   color: #0969da; /* GitHub link blue */
   text-decoration: none;
   font-weight: 400;

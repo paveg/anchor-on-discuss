@@ -23,7 +23,12 @@ export class TOCManager {
    * Initialize TOC
    */
   init(headings: HeadingWithAnchor[]): void {
-    if (headings.length === 0) return;
+    console.log('[TOC] Initializing with', headings.length, 'headings');
+
+    if (headings.length === 0) {
+      console.log('[TOC] No headings found, skipping TOC creation');
+      return;
+    }
 
     this.items = headings.map((heading) => ({
       id: heading.id,
@@ -32,6 +37,7 @@ export class TOCManager {
       element: heading.element,
     }));
 
+    console.log('[TOC] Creating TOC with', this.items.length, 'items');
     this.createTOC();
     this.setupIntersectionObserver();
   }
@@ -70,6 +76,8 @@ export class TOCManager {
     this.container.appendChild(header);
     this.container.appendChild(this.tocList);
     document.body.appendChild(this.container);
+
+    console.log('[TOC] TOC container added to body');
 
     // Adjust main content width to make room for TOC
     this.adjustContentWidth();

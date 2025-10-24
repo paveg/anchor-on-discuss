@@ -157,7 +157,8 @@ function findHeadings(config: AnchorConfig): HTMLHeadingElement[] {
   // Filter to only include headings within GitHub Discussion content
   return Array.from(headings).filter((heading) => {
     // Target headings in discussion body and comments
-    return heading.closest('.markdown-body, .comment-body');
+    // Use broader selectors to catch all content areas
+    return heading.closest('.markdown-body, .comment-body, [class*="Discussion"], article, main');
   });
 }
 
@@ -169,7 +170,10 @@ export function processHeadings(
 ): HeadingWithAnchor[] {
   const config = { ...DEFAULT_CONFIG, ...customConfig };
   const headings = findHeadings(config);
-  return headings.map((heading) => addAnchorToHeading(heading, config));
+  console.log('[Anchor] Found', headings.length, 'headings to process');
+  const result = headings.map((heading) => addAnchorToHeading(heading, config));
+  console.log('[Anchor] Processed', result.length, 'headings');
+  return result;
 }
 
 /**
