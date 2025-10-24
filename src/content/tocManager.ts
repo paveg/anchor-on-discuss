@@ -30,14 +30,29 @@ export class TOCManager {
       return;
     }
 
-    this.items = headings.map((heading) => ({
-      id: heading.id,
-      text: heading.element.textContent?.trim() || '',
-      level: parseInt(heading.level.charAt(1)),
-      element: heading.element,
-    }));
+    this.items = headings.map((heading) => {
+      // Get text from anchor-wrapper to exclude the anchor link itself
+      const wrapper = heading.element.querySelector('.anchor-wrapper');
+      let text = wrapper
+        ? wrapper.textContent?.trim() || ''
+        : heading.element.textContent?.trim() || '';
+
+      // Normalize whitespace and clean up text
+      text = text
+        .replace(/\s+/g, ' ') // Replace multiple whitespaces/newlines with single space
+        .replace(/\s*#\d+\s*$/, '') // Remove trailing issue numbers like #26
+        .trim();
+
+      return {
+        id: heading.id,
+        text,
+        level: parseInt(heading.level.charAt(1)),
+        element: heading.element,
+      };
+    });
 
     console.log('[TOC] Creating TOC with', this.items.length, 'items');
+    console.log('[TOC] First 3 items:', this.items.slice(0, 3).map(i => ({ id: i.id, text: i.text, level: i.level })));
     this.createTOC();
     this.setupIntersectionObserver();
   }

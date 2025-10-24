@@ -3,7 +3,6 @@ import {
   handleInitialHash,
   setupHashChangeListener,
 } from './anchorManager';
-import { tocManager } from './tocManager';
 import './styles.css';
 
 /**
@@ -29,13 +28,10 @@ function debounce<T extends (...args: any[]) => void>(
 }
 
 /**
- * Process headings and update TOC
+ * Process headings (anchor links only)
  */
-function processAndUpdateTOC(): void {
-  console.log('[Main] Processing headings and updating TOC...');
-  const headings = processHeadings();
-  console.log('[Main] Updating TOC with', headings.length, 'headings');
-  tocManager.update(headings);
+function processHeadingsOnly(): void {
+  processHeadings();
 }
 
 /**
@@ -43,7 +39,7 @@ function processAndUpdateTOC(): void {
  */
 function setupMutationObserver(): MutationObserver {
   const debouncedProcess = debounce(() => {
-    processAndUpdateTOC();
+    processHeadingsOnly();
   }, 300);
 
   const observer = new MutationObserver((mutations) => {
@@ -82,13 +78,10 @@ function setupMutationObserver(): MutationObserver {
  * Initializes the extension
  */
 function init(): void {
-  console.log('[Anchor on Discuss] Initializing...');
-
   // Delay initial processing to ensure content is loaded
   setTimeout(() => {
-    console.log('[Anchor on Discuss] Running delayed initialization...');
-    // Process existing headings and create TOC
-    processAndUpdateTOC();
+    // Process existing headings
+    processHeadingsOnly();
 
     // Handle initial URL hash
     handleInitialHash();
@@ -99,8 +92,6 @@ function init(): void {
 
   // Setup mutation observer for dynamic content
   setupMutationObserver();
-
-  console.log('[Anchor on Discuss] Initialized successfully');
 }
 
 // Wait for DOM to be ready
@@ -115,13 +106,13 @@ if (document.readyState === 'loading') {
 // Re-process headings when navigating within GitHub
 window.addEventListener('popstate', () => {
   setTimeout(() => {
-    processAndUpdateTOC();
+    processHeadingsOnly();
     handleInitialHash();
   }, 100);
 });
 
 // Additional listener for Turbo Drive (if present)
 document.addEventListener('turbo:load', () => {
-  processAndUpdateTOC();
+  processHeadingsOnly();
   handleInitialHash();
 });

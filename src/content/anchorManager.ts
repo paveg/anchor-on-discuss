@@ -11,12 +11,13 @@ const DEFAULT_CONFIG: AnchorConfig = {
 
 /**
  * Generates a URL-safe ID from heading text
+ * Supports multi-byte characters (Japanese, Chinese, etc.)
  */
 function generateId(text: string): string {
   return text
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/[^\p{L}\p{N}\s-]/gu, '') // Keep Unicode letters, numbers, spaces, hyphens
     .replace(/\s+/g, '-') // Replace spaces with hyphens
     .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
     .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
@@ -170,9 +171,7 @@ export function processHeadings(
 ): HeadingWithAnchor[] {
   const config = { ...DEFAULT_CONFIG, ...customConfig };
   const headings = findHeadings(config);
-  console.log('[Anchor] Found', headings.length, 'headings to process');
   const result = headings.map((heading) => addAnchorToHeading(heading, config));
-  console.log('[Anchor] Processed', result.length, 'headings');
   return result;
 }
 
