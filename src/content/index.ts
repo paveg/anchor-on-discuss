@@ -3,6 +3,7 @@ import {
   handleInitialHash,
   setupHashChangeListener,
 } from './anchorManager';
+import { tocManager } from './tocManager';
 import './styles.css';
 
 /**
@@ -28,11 +29,19 @@ function debounce<T extends (...args: any[]) => void>(
 }
 
 /**
+ * Process headings and update TOC
+ */
+function processAndUpdateTOC(): void {
+  const headings = processHeadings();
+  tocManager.update(headings);
+}
+
+/**
  * Observes DOM changes to detect new headings
  */
 function setupMutationObserver(): MutationObserver {
   const debouncedProcess = debounce(() => {
-    processHeadings();
+    processAndUpdateTOC();
   }, 300);
 
   const observer = new MutationObserver((mutations) => {
@@ -73,8 +82,8 @@ function setupMutationObserver(): MutationObserver {
 function init(): void {
   console.log('[Anchor on Discuss] Initializing...');
 
-  // Process existing headings
-  processHeadings();
+  // Process existing headings and create TOC
+  processAndUpdateTOC();
 
   // Handle initial URL hash
   handleInitialHash();
@@ -100,13 +109,13 @@ if (document.readyState === 'loading') {
 // Re-process headings when navigating within GitHub
 window.addEventListener('popstate', () => {
   setTimeout(() => {
-    processHeadings();
+    processAndUpdateTOC();
     handleInitialHash();
   }, 100);
 });
 
 // Additional listener for Turbo Drive (if present)
 document.addEventListener('turbo:load', () => {
-  processHeadings();
+  processAndUpdateTOC();
   handleInitialHash();
 });
